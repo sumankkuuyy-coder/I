@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICICI Bank - Business Correspondent (CSP) Portal</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Colorful Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        :root {
+            --icici-navy: #003366;
+            --icici-orange: #F37021;
+            --icici-bg: #F4F6F9;
+            --icici-border: #E5E7EB;
+            --icici-text: #2D3748;
+        }
+
+        body {
+            background-color: var(--icici-bg);
+            color: var(--icici-text);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* ================= AUTHENTICATION LOGIN SCREEN ================= */
+        .login-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #003366 0%, #001f3f 100%);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+        }
+
+        .login-card {
+            background: #ffffff;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 8px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            overflow: hidden;
+            border-top: 5px solid var(--icici-orange);
+        }
+
+        .login-header-box {
+            padding: 24px 20px 16px 20px;
+            text-align: left;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        .login-logo {
+            height: 32px;
+            object-fit: contain;
+        }
+
+        .login-form-body {
+            padding: 24px 20px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: #374151;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid var(--icici-border);
+            border-radius: 4px;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s ease;
+            background: #FAFAFA;
+        }
+
+        .form-input:focus {
+            border-color: var(--icici-orange);
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(243, 112, 33, 0.15);
+        }
+
+        .login-submit-btn {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 4px;
+            background: linear-gradient(135deg, var(--icici-orange) 0%, #D95300 100%);
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: opacity 0.2s;
+        }
+
+        .login-submit-btn:hover {
+            opacity: 0.92;
+        }
+
+        .login-error {
+            color: #DC2626;
+            font-size: 12px;
+            text-align: center;
+            margin-top: 10px;
+            font-weight: 600;
+            display: none;
+        }
+
+        /* ================= DASHBOARD APP SCREEN ================= */
+        .app-main-container {
+            display: none;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Sticky Header & Navbar Container */
+        .header-nav-sticky-wrapper {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        /* Top Header */
+        .portal-header {
+            background: #ffffff;
+            height: 65px;
+            border-bottom: 3px solid var(--icici-orange);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-logo {
+            height: 32px;
+            object-fit: contain;
+        }
+
+        .balance-badge {
+            background: #FFF7ED;
+            border: 1px solid #FFEDD5;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #C2410C;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .biometric-btn {
+            background: #EFF6FF;
+            color: #1D4ED8;
+            border: 1.5px solid #BFDBFE;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .biometric-btn:hover {
+            background: #DBEAFE;
+            border-color: #3B82F6;
+        }
+
+        .biometric-status {
+            width: 8px;
+            height: 8px;
+            background-color: #EF4444;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .csp-info {
+            font-size: 13px;
+            color: var(--icici-navy);
+            font-weight: 700;
+        }
+
+        .logout-btn {
+            background: #FEE2E2;
+            color: #DC2626;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: #FDC2C2;
+        }
+
+        /* Top Navigation Bar with Fixed Submenus */
+        .top-navbar {
+            background: var(--icici-navy);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            overflow-x: visible;
+        }
+
+        .nav-item {
+            position: relative;
+            padding: 14px 16px;
+            color: #ffffff;
+            font-size: clamp(11px, 0.85vw, 13px);
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: transparent;
+            white-space: nowrap;
+            transition: background 0.25s ease, color 0.25s ease;
+        }
+
+        .nav-item:hover {
+            background: var(--icici-orange);
+            color: #ffffff;
+        }
+
+        .nav-item i {
+            color: var(--icici-orange);
+            transition: color 0.25s ease;
+        }
+
+        .nav-item:hover i {
+            color: #ffffff;
+        }
+
+        /* Submenu Dropdown Fix */
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: #003366;
+            min-width: 240px;
+            box-shadow: 0 12px 24px rgba(0,0,0,0.25);
+            border-radius: 0 0 6px 6px;
+            border-top: 3px solid var(--icici-orange);
+            flex-direction: column;
+            z-index: 1100;
+        }
+
+        .nav-item:hover .dropdown-menu {
+            display: flex;
+        }
+
+        .dropdown-item {
+            padding: 12px 16px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #ffffff;
+            background: #003366;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: background 0.2s ease, padding-left 0.2s ease, color 0.2s ease;
+            white-space: normal;
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover {
+            background: var(--icici-orange);
+            color: #ffffff;
+            padding-left: 20px;
+        }
+
+        /* Main Dashboard Container */
+        .dashboard-container {
+            max-width: 1320px;
+            margin: 20px auto;
+            padding: 0 20px;
+            flex: 1;
+            width: 100%;
+        }
+
+        .section-heading {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--icici-navy);
+            margin: 24px 0 14px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 2px solid #E5E7EB;
+            padding-bottom: 6px;
+        }
+
+        /* 80+ Grid Services Layout (6 columns) */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 14px;
+        }
+
+        .service-card {
+            background: #ffffff;
+            border: 1px solid var(--icici-border);
+            border-radius: 8px;
+            padding: 16px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .service-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--icici-orange);
+            box-shadow: 0 6px 15px rgba(243, 112, 33, 0.12);
+        }
+
+        .service-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .service-name {
+            font-size: 11px;
+            font-weight: 600;
+            color: #374151;
+            line-height: 1.25;
+        }
+
+        /* Processing Loader Spinner */
+        .processing-spinner {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #E5E7EB;
+            border-top: 4px solid var(--icici-orange);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 10px auto 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Zoom-In Popup Modal with Close Icon */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-card {
+            background: #ffffff;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+            border-top: 4px solid var(--icici-orange);
+            transform: scale(0.7);
+            opacity: 0;
+            animation: zoomInModal 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            position: relative;
+        }
+
+        @keyframes zoomInModal {
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: #F3F4F6;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #4B5563;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .modal-close-btn:hover {
+            background: #E5E7EB;
+            color: #1F2937;
+        }
+
+        .modal-icon-container {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin: 0 auto 16px auto;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--icici-navy);
+            margin-bottom: 8px;
+        }
+
+        .modal-desc {
+            font-size: 13px;
+            color: #4B5563;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .modal-btn {
+            background: linear-gradient(135deg, var(--icici-orange) 0%, #D95300 100%);
+            color: #ffffff;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .modal-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* Official ICICI Bank Real Full Footer */
+        .portal-footer {
+            background: #ffffff;
+            border-top: 1px solid var(--icici-border);
+            padding: 30px 40px;
+            margin-top: 50px;
+            color: #4B5563;
+            font-size: 12px;
+        }
+
+        .footer-container {
+            max-width: 1320px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .footer-row-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #E5E7EB;
+            padding-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .footer-logo {
+            height: 28px;
+            object-fit: contain;
+        }
+
+        .footer-security-badges {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            font-weight: 600;
+            color: #374151;
+            font-size: 11px;
+        }
+
+        .footer-row-middle {
+            line-height: 1.6;
+            color: #6B7280;
+            font-size: 11px;
+        }
+
+        .footer-row-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #E5E7EB;
+            padding-top: 16px;
+            flex-wrap: wrap;
+            gap: 15px;
+            font-size: 11px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--icici-navy);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= LOGIN SCREEN ================= -->
+    <div class="login-wrapper" id="loginWrapper">
+        <div class="login-card">
+            <div class="login-header-box">
+                <img src="https://i.ibb.co/jv4CLmZd/media-14a74a8539b18077c7a0776801f6143837c880a31.webp" alt="ICICI Logo" class="login-logo">
+            </div>
+            <div class="login-form-body">
+                <form id="cspLoginForm" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label>User ID</label>
+                        <input type="text" id="loginUserId" class="form-input" placeholder="Enter User ID" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="loginPassword" class="form-input" placeholder="Enter Password" required>
+                    </div>
+                    <button type="submit" class="login-submit-btn">LOGIN</button>
+                    <div class="login-error" id="loginError">Invalid User ID or Password! Please try again.</div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= DASHBOARD APP CONTAINER ================= -->
+    <div class="app-main-container" id="appMainContainer">
+
+        <!-- Sticky Header & Navbar Container -->
+        <div class="header-nav-sticky-wrapper">
+            <!-- Top Header -->
+            <header class="portal-header">
+                <div class="header-left">
+                    <img src="https://i.ibb.co/jv4CLmZd/media-14a74a8539b18077c7a0776801f6143837c880a31.webp" alt="ICICI Logo" class="header-logo">
+                    
+                    <div class="balance-badge">
+                        <i class="fa-solid fa-wallet"></i> Balance: ₹0.00
+                    </div>
+
+                    <button class="biometric-btn" onclick="connectBiometricDevice()">
+                        <i class="fa-solid fa-fingerprint"></i>
+                        <span id="biometricText">Connect Biometric Device</span>
+                        <span class="biometric-status" id="biometricIndicator"></span>
+                    </button>
+                </div>
+                <div class="header-right">
+                    <div class="csp-info">
+                        Shibu S L
+                    </div>
+                    <button class="logout-btn" onclick="handleLogout()">Logout</button>
+                </div>
+            </header>
+
+            <!-- Top Navigation Bar with Fixed Submenus -->
+            <nav class="top-navbar">
+                <div class="nav-item" onclick="openServiceModal('Dashboard Home', 'fa-house', '#E0F2FE', '#0284C7')">
+                    <i class="fa-solid fa-house"></i> Home
+                </div>
+
+                <!-- Menu 1 -->
+                <div class="nav-item">
+                    <i class="fa-solid fa-fingerprint"></i> AEPS & ATM <i class="fa-solid fa-chevron-down" style="font-size: 9px;"></i>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-item" onclick="openServiceModal('Cash Withdrawal', 'fa-money-bill-wave', '#E0F2FE', '#0284C7')">Cash Withdrawal</div>
+                        <div class="dropdown-item" onclick="openServiceModal('Balance Enquiry', 'fa-magnifying-glass-dollar', '#FEF3C7', '#D97706')">Balance Enquiry</div>
+                        <div class="dropdown-item" onclick="openServiceModal('Mini Statement', 'fa-file-invoice', '#F3E8FF', '#9333EA')">Mini Statement</div>
+                        <div class="dropdown-item" onclick="openServiceModal('Aadhaar Pay', 'fa-fingerprint', '#FFEDD5', '#EA580C')">Aadhaar Pay</div>
+                        <div class="dropdown-item" onclick="openServiceModal('Micro ATM Withdraw', 'fa-cash-register', '#CCFBF1', '#0D9488')">Micro ATM Withdraw</div>
+                    </div>
+                </div>
+
+                <!-- Menu 2 -->
+                <div class="nav-item">
+                    <i class="fa-solid fa-money-bill-transfer"></i> Money Transfer <i class="fa-solid fa-chevron-down" style="font-size: 9px;"></i>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-item" onclick="openServiceModal('Domestic Transfer (DMT)', 'fa-money-bill-transfer', '#FEE2E2', '#DC2626')">Domestic Transfer (DMT)</div>
+                        <div class="dropdown-item" onclick="openServiceModal('IMPS Instant Transfer', 'fa-bolt', '#E0F2FE', '#0284C7')">IMPS Instant Transfer</div>
+                        <div class="dropdown-item" onclick="openServiceModal('NEFT Bank Transfer', 'fa-building-columns', '#DCFCE7', '#16A34A')">NEFT Bank Transfer</div>
+                        <div class="dropdown-item" onclick="openServiceModal('RTGS Large Transfer', 'fa-sack-dollar', '#FEF3C7', '#D97706')">RTGS Large Transfer</div>
+                        <div class="dropdown-item" onclick="openServiceModal('UPI P2P Transfer', 'fa-mobile-screen-button', '#F3E8FF', '#9333EA')">UPI P2P Transfer</div>
+                    </div>
+                </div>
+
+                <!-- Menu 3 -->
+                <div class="nav-item">
+                    <i class="fa-solid fa-user-check"></i> Account & KYC <i class="fa-solid fa-chevron-down" style="font-size: 9px;"></i>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-item" onclick="openServiceModal('Savings Account', 'fa-user-check', '#DCFCE7', '#15803D')">Savings Account</div>
+                        <div class="dropdown-item" onclick="openServiceModal('Current Account', 'fa-briefcase', '#FEF3C7', '#B45309')">Current Account</div>
+                        <div class="dropdown-item" onclick="openServiceModal('Video KYC Verification', 'fa-video', '#EDE9FE', '#7C3AED')">Video KYC Verification</div>
+                        <div class="dropdown-item" onclick="openServiceModal('Aadhaar Seeding', 'fa-id-badge', '#FEE2E2', '#DC2626')">Aadhaar Seeding</div>
+                        <div class="dropdown-item" onclick="openServiceModal('PAN Linking', 'fa-file-lines', '#E0E7FF', '#4338CA')">PAN Linking</div>
+                    </div>
+                </div>
+
+                <!-- Menu 4 -->
+                <div class="nav-item">
+                    <i class="fa-solid fa-lightbulb"></i> BBPS & Utility <i class="fa-solid fa-chevron-down" style="font-size: 9px;"></i>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-item" onclick="openServiceModal('Electricity Bill', 'fa-lightbulb', '#FEF3C7', '#D97706')">Electricity Bill</div>
+                        <div class="dropdown-item" onclick="openServiceModal('Water Bill', 'fa-droplet', '#E0F2FE', '#0284C7')">Water Bill</div>
+                        <div class="dropdown-item" onclick="openServiceModal('Piped Gas Bill', 'fa-fire-flame-curved', '#FFEDD5', '#EA580C')">Piped Gas Bill</div>
+                        <div class="dropdown-item" onclick="openServiceModal('LPG Cylinder Booking', 'fa-gas-pump', '#FEE2E2', '#DC2626')">LPG Cylinder Booking</div>
+                        <div class="dropdown-item" onclick="openServiceModal('Municipal Tax', 'fa-landmark', '#CCFBF1', '#0D9488')">Municipal Tax</div>
+                    </div>
+                </div>
+
+                <!-- Menu 5 -->
+                <div class="nav-item">
+                    <i class="fa-solid fa-mobile-screen"></i> Recharges <i class="fa-solid fa-chevron-down" style="font-size: 9px;"></i>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-item" onclick="openServiceModal('Mobile Prepaid', 'fa-mobile-screen', '#FCE7F3', '#DB2777')">Mobile Prepaid</div>
+                        <div class="dropdown-item" onclick="openServiceModal('Mobile Postpaid', 'fa-phone-volume', '#E0E7FE', '#4338CA')">Mobile Postpaid</div>
+                        <div class="dropdown-item" onclick="openServiceModal('DTH Recharge', 'fa-tv', '#FEF9C3', '#CA8A04')">DTH Recharge</div>
+                        <div class="dropdown-item" onclick="openServiceModal('FASTag Issuance', 'fa-car', '#E0F2FE', '#0284C7')">FASTag Issuance</div>
+                        <div class="dropdown-item" onclick="openServiceModal('FASTag Recharge', 'fa-road', '#DCFCE7', '#15803D')">FASTag Recharge</div>
+                    </div>
+                </div>
+
+                <!-- Menu 6 -->
+                <div class="nav-item">
+                    <i class="fa-solid fa-hand-holding-dollar"></i> Loans <i class="fa-solid fa-chevron-down" style="font-size: 9px;"></i>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-item" onclick="openServiceModal('Personal Loan', 'fa-hand-holding-dollar', '#FCE7F3', '#BE185D')">Personal Loan</div>
+                        <div class="dropdown-item" onclick="openServiceModal('Gold Loan', 'fa-coins', '#FEF9C3', '#A16207')">Gold Loan</div>
+                        <div class="dropdown-item" onclick="openServiceModal('Home Loan', 'fa-house', '#E0F2FE', '#0284C7')">Home Loan</div>
+                        <div class="dropdown-item" onclick="openServiceModal('Mudra Loan (PMMY)', 'fa-handshake', '#FEE2E2', '#DC2626')">Mudra Loan (PMMY)</div>
+                        <div class="dropdown-item" onclick="openServiceModal('Credit Card Apply', 'fa-credit-card', '#E0E7FF', '#4F46E5')">Credit Card Apply</div>
+                    </div>
+                </div>
+
+                <!-- Menu 7 -->
+                <div class="nav-item">
+                    <i class="fa-solid fa-shield-halved"></i> Insurance <i class="fa-solid fa-chevron-down" style="font-size: 9px;"></i>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-item" onclick="openServiceModal('PMJJBY Insurance', 'fa-shield-halved', '#DCFCE7', '#16A34A')">PMJJBY Insurance</div>
+                        <div class="dropdown-item" onclick="openServiceModal('PMSBY Insurance', 'fa-shield-heart', '#E0E7FF', '#4338CA')">PMSBY Insurance</div>
+                        <div class="dropdown-item" onclick="openServiceModal('Atal Pension (APY)', 'fa-user-shield', '#FEE2E2', '#991B1B')">Atal Pension (APY)</div>
+                        <div class="dropdown-item" onclick="openServiceModal('Health Insurance', 'fa-heart-pulse', '#FCE7F3', '#DB2777')">Health Insurance</div>
+                    </div>
+                </div>
+
+                <!-- Menu 8 -->
+                <div class="nav-item">
+                    <i class="fa-solid fa-chart-line"></i> Reports & Admin <i class="fa-solid fa-chevron-down" style="font-size: 9px;"></i>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-item" onclick="openServiceModal('Transaction Ledger', 'fa-book-bookmark', '#F3E8FF', '#7E22CE')">Transaction Ledger</div>
+                        <div class="dropdown-item" onclick="openServiceModal('Commission Payout', 'fa-hand-holding-hand', '#DCFCE7', '#15803D')">Commission Payout</div>
+                        <div class="dropdown-item" onclick="openServiceModal('CMS Cash Deposit', 'fa-box-archive', '#FFEDD5', '#C2410C')">CMS Cash Deposit</div>
+                        <div class="dropdown-item" onclick="openServiceModal('Helpdesk Support', 'fa-headset', '#FEE2E2', '#B91C1C')">Helpdesk Support</div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <!-- Main Dashboard Grid Content (80+ Services) -->
+        <div class="dashboard-container">
+
+            <!-- SECTION 1 -->
+            <div class="section-heading">⚡ AEPS & Micro ATM Services</div>
+            <div class="services-grid">
+                <div class="service-card" onclick="openServiceModal('Cash Withdrawal', 'fa-money-bill-wave', '#E0F2FE', '#0284C7')"><div class="service-icon" style="background:#E0F2FE; color:#0284C7;"><i class="fa-solid fa-money-bill-wave"></i></div><div class="service-name">Cash Withdrawal</div></div>
+                <div class="service-card" onclick="openServiceModal('Balance Enquiry', 'fa-magnifying-glass-dollar', '#FEF3C7', '#D97706')"><div class="service-icon" style="background:#FEF3C7; color:#D97706;"><i class="fa-solid fa-magnifying-glass-dollar"></i></div><div class="service-name">Balance Enquiry</div></div>
+                <div class="service-card" onclick="openServiceModal('Mini Statement', 'fa-file-invoice', '#F3E8FF', '#9333EA')"><div class="service-icon" style="background:#F3E8FF; color:#9333EA;"><i class="fa-solid fa-file-invoice"></i></div><div class="service-name">Mini Statement</div></div>
+                <div class="service-card" onclick="openServiceModal('Aadhaar Pay', 'fa-fingerprint', '#FFEDD5', '#EA580C')"><div class="service-icon" style="background:#FFEDD5; color:#EA580C;"><i class="fa-solid fa-fingerprint"></i></div><div class="service-name">Aadhaar Pay</div></div>
+                <div class="service-card" onclick="openServiceModal('Micro ATM Withdraw', 'fa-cash-register', '#CCFBF1', '#0D9488')"><div class="service-icon" style="background:#CCFBF1; color:#0D9488;"><i class="fa-solid fa-cash-register"></i></div><div class="service-name">Micro ATM Withdraw</div></div>
+                <div class="service-card" onclick="openServiceModal('Micro ATM Balance', 'fa-chart-pie', '#DCFCE7', '#16A34A')"><div class="service-icon" style="background:#DCFCE7; color:#16A34A;"><i class="fa-solid fa-chart-pie"></i></div><div class="service-name">Micro ATM Balance</div></div>
+                <div class="service-card" onclick="openServiceModal('Biometric Auth', 'fa-hand-pointer', '#E0E7FF', '#4F46E5')"><div class="service-icon" style="background:#E0E7FF; color:#4F46E5;"><i class="fa-solid fa-hand-pointer"></i></div><div class="service-name">Biometric Auth</div></div>
+                <div class="service-card" onclick="openServiceModal('Iris Scan Verify', 'fa-eye', '#FEE2E2', '#DC2626')"><div class="service-icon" style="background:#FEE2E2; color:#DC2626;"><i class="fa-solid fa-eye"></i></div><div class="service-name">Iris Scan Verify</div></div>
+                <div class="service-card" onclick="openServiceModal('Device Unlock', 'fa-unlock-keyhole', '#FEF9C3', '#CA8A04')"><div class="service-icon" style="background:#FEF9C3; color:#CA8A04;"><i class="fa-solid fa-unlock-keyhole"></i></div><div class="service-name">Device Unlock</div></div>
+                <div class="service-card" onclick="openServiceModal('AEPS PDF Report', 'fa-file-pdf', '#F3F4F6', '#374151')"><div class="service-icon" style="background:#F3F4F6; color:#374151;"><i class="fa-solid fa-file-pdf"></i></div><div class="service-name">AEPS PDF Report</div></div>
+                <div class="service-card" onclick="openServiceModal('Virtual Card AEPS', 'fa-id-card', '#E0F2FE', '#0284C7')"><div class="service-icon" style="background:#E0F2FE; color:#0284C7;"><i class="fa-solid fa-id-card"></i></div><div class="service-name">Virtual Card AEPS</div></div>
+                <div class="service-card" onclick="openServiceModal('Device Check', 'fa-stethoscope', '#FCE7F3', '#DB2777')"><div class="service-icon" style="background:#FCE7F3; color:#DB2777;"><i class="fa-solid fa-stethoscope"></i></div><div class="service-name">Device Check</div></div>
+            </div>
+
+            <!-- SECTION 2 -->
+            <div class="section-heading">💸 Money Transfer & Remittance</div>
+            <div class="services-grid">
+                <div class="service-card" onclick="openServiceModal('Domestic Transfer', 'fa-money-bill-transfer', '#FEE2E2', '#DC2626')"><div class="service-icon" style="background:#FEE2E2; color:#DC2626;"><i class="fa-solid fa-money-bill-transfer"></i></div><div class="service-name">Domestic Transfer</div></div>
+                <div class="service-card" onclick="openServiceModal('IMPS Transfer', 'fa-bolt', '#E0F2FE', '#0284C7')"><div class="service-icon" style="background:#E0F2FE; color:#0284C7;"><i class="fa-solid fa-bolt"></i></div><div class="service-name">IMPS Transfer</div></div>
+                <div class="service-card" onclick="openServiceModal('NEFT Transfer', 'fa-building-columns', '#DCFCE7', '#16A34A')"><div class="service-icon" style="background:#DCFCE7; color:#16A34A;"><i class="fa-solid fa-building-columns"></i></div><div class="service-name">NEFT Transfer</div></div>
+                <div class="service-card" onclick="openServiceModal('RTGS Transfer', 'fa-sack-dollar', '#FEF3C7', '#D97706')"><div class="service-icon" style="background:#FEF3C7; color:#D97706;"><i class="fa-solid fa-sack-dollar"></i></div><div class="service-name">RTGS Transfer</div></div>
+                <div class="service-card" onclick="openServiceModal('UPI P2P Transfer', 'fa-mobile-screen-button', '#F3E8FF', '#9333EA')"><div class="service-icon" style="background:#F3E8FF; color:#9333EA;"><i class="fa-solid fa-mobile-screen-button"></i></div><div class="service-name">UPI P2P Transfer</div></div>
+                <div class="service-card" onclick="openServiceModal('Beneficiary Add', 'fa-user-plus', '#FFEDD5', '#EA580C')"><div class="service-icon" style="background:#FFEDD5; color:#EA580C;"><i class="fa-solid fa-user-plus"></i></div><div class="service-name">Beneficiary Add</div></div>
+                <div class="service-card" onclick="openServiceModal('Remitter Register', 'fa-address-card', '#CCFBF1', '#0D9488')"><div class="service-icon" style="background:#CCFBF1; color:#0D9488;"><i class="fa-solid fa-address-card"></i></div><div class="service-name">Remitter Register</div></div>
+                <div class="service-card" onclick="openServiceModal('Txn Status Check', 'fa-circle-question', '#E0E7FF', '#4F46E5')"><div class="service-icon" style="background:#E0E7FF; color:#4F46E5;"><i class="fa-solid fa-circle-question"></i></div><div class="service-name">Txn Status Check</div></div>
+                <div class="service-card" onclick="openServiceModal('Refund Request', 'fa-rotate-left', '#FEE2E2', '#991B1B')"><div class="service-icon" style="background:#FEE2E2; color:#991B1B;"><i class="fa-solid fa-rotate-left"></i></div><div class="service-name">Refund Request</div></div>
+                <div class="service-card" onclick="openServiceModal('Intl Remittance', 'fa-globe', '#FEF9C3', '#CA8A04')"><div class="service-icon" style="background:#FEF9C3; color:#CA8A04;"><i class="fa-solid fa-globe"></i></div><div class="service-name">Intl Remittance</div></div>
+                <div class="service-card" onclick="openServiceModal('QR Collection', 'fa-qrcode', '#FCE7F3', '#DB2777')"><div class="service-icon" style="background:#FCE7F3; color:#DB2777;"><i class="fa-solid fa-qrcode"></i></div><div class="service-name">QR Collection</div></div>
+                <div class="service-card" onclick="openServiceModal('Virtual A/C Pay', 'fa-credit-card', '#F3F4F6', '#374151')"><div class="service-icon" style="background:#F3F4F6; color:#374151;"><i class="fa-solid fa-credit-card"></i></div><div class="service-name">Virtual A/C Pay</div></div>
+            </div>
+
+            <!-- SECTION 3 -->
+            <div class="section-heading">🏦 Account Opening & KYC Services</div>
+            <div class="services-grid">
+                <div class="service-card" onclick="openServiceModal('Savings Account', 'fa-user-check', '#DCFCE7', '#15803D')"><div class="service-icon" style="background:#DCFCE7; color:#15803D;"><i class="fa-solid fa-user-check"></i></div><div class="service-name">Savings Account</div></div>
+                <div class="service-card" onclick="openServiceModal('Current Account', 'fa-briefcase', '#FEF3C7', '#B45309')"><div class="service-icon" style="background:#FEF3C7; color:#B45309;"><i class="fa-solid fa-briefcase"></i></div><div class="service-name">Current Account</div></div>
+                <div class="service-card" onclick="openServiceModal('Salary Account', 'fa-wallet', '#E0F2FE', '#0369A1')"><div class="service-icon" style="background:#E0F2FE; color:#0369A1;"><i class="fa-solid fa-wallet"></i></div><div class="service-name">Salary Account</div></div>
+                <div class="service-card" onclick="openServiceModal('BSBD Zero A/C', 'fa-piggy-bank', '#F3E8FF', '#7E22CE')"><div class="service-icon" style="background:#F3E8FF; color:#7E22CE;"><i class="fa-solid fa-piggy-bank"></i></div><div class="service-name">BSBD Zero A/C</div></div>
+                <div class="service-card" onclick="openServiceModal('Minor Account', 'fa-child', '#FFEDD5', '#C2410C')"><div class="service-icon" style="background:#FFEDD5; color:#C2410C;"><i class="fa-solid fa-child"></i></div><div class="service-name">Minor Account</div></div>
+                <div class="service-card" onclick="openServiceModal('Senior Citizen A/C', 'fa-person-cane', '#CCFBF1', '#0F766E')"><div class="service-icon" style="background:#CCFBF1; color:#0F766E;"><i class="fa-solid fa-person-cane"></i></div><div class="service-name">Senior Citizen A/C</div></div>
+                <div class="service-card" onclick="openServiceModal('Video KYC', 'fa-video', '#EDE9FE', '#7C3AED')"><div class="service-icon" style="background:#EDE9FE; color:#7C3AED;"><i class="fa-solid fa-video"></i></div><div class="service-name">Video KYC</div></div>
+                <div class="service-card" onclick="openServiceModal('Aadhaar Seeding', 'fa-id-badge', '#FEE2E2', '#DC2626')"><div class="service-icon" style="background:#FEE2E2; color:#DC2626;"><i class="fa-solid fa-id-badge"></i></div><div class="service-name">Aadhaar Seeding</div></div>
+                <div class="service-card" onclick="openServiceModal('PAN Linking', 'fa-file-lines', '#E0E7FF', '#4338CA')"><div class="service-icon" style="background:#E0E7FF; color:#4338CA;"><i class="fa-solid fa-file-lines"></i></div><div class="service-name">PAN Linking</div></div>
+                <div class="service-card" onclick="openServiceModal('Update Mobile', 'fa-mobile-button', '#FEF9C3', '#A16207')"><div class="service-icon" style="background:#FEF9C3; color:#A16207;"><i class="fa-solid fa-mobile-button"></i></div><div class="service-name">Update Mobile</div></div>
+                <div class="service-card" onclick="openServiceModal('Update Address', 'fa-house-laptop', '#FCE7F3', '#BE185D')"><div class="service-icon" style="background:#FCE7F3; color:#BE185D;"><i class="fa-solid fa-house-laptop"></i></div><div class="service-name">Update Address</div></div>
+                <div class="service-card" onclick="openServiceModal('Passbook Print', 'fa-book-open', '#F3F4F6', '#1F2937')"><div class="service-icon" style="background:#F3F4F6; color:#1F2937;"><i class="fa-solid fa-book-open"></i></div><div class="service-name">Passbook Print</div></div>
+            </div>
+
+            <!-- SECTION 4 -->
+            <div class="section-heading">💡 BBPS & Utility Bill Payments</div>
+            <div class="services-grid">
+                <div class="service-card" onclick="openServiceModal('Electricity Bill', 'fa-lightbulb', '#FEF3C7', '#D97706')"><div class="service-icon" style="background:#FEF3C7; color:#D97706;"><i class="fa-solid fa-lightbulb"></i></div><div class="service-name">Electricity Bill</div></div>
+                <div class="service-card" onclick="openServiceModal('Water Bill', 'fa-droplet', '#E0F2FE', '#0284C7')"><div class="service-icon" style="background:#E0F2FE; color:#0284C7;"><i class="fa-solid fa-droplet"></i></div><div class="service-name">Water Bill</div></div>
+                <div class="service-card" onclick="openServiceModal('Piped Gas Bill', 'fa-fire-flame-curved', '#FFEDD5', '#EA580C')"><div class="service-icon" style="background:#FFEDD5; color:#EA580C;"><i class="fa-solid fa-fire-flame-curved"></i></div><div class="service-name">Piped Gas Bill</div></div>
+                <div class="service-card" onclick="openServiceModal('LPG Booking', 'fa-gas-pump', '#FEE2E2', '#DC2626')"><div class="service-icon" style="background:#FEE2E2; color:#DC2626;"><i class="fa-solid fa-gas-pump"></i></div><div class="service-name">LPG Booking</div></div>
+                <div class="service-card" onclick="openServiceModal('Broadband Bill', 'fa-network-wired', '#DCFCE7', '#16A34A')"><div class="service-icon" style="background:#DCFCE7; color:#16A34A;"><i class="fa-solid fa-network-wired"></i></div><div class="service-name">Broadband Bill</div></div>
+                <div class="service-card" onclick="openServiceModal('Landline Bill', 'fa-phone', '#F3E8FF', '#9333EA')"><div class="service-icon" style="background:#F3E8FF; color:#9333EA;"><i class="fa-solid fa-phone"></i></div><div class="service-name">Landline Bill</div></div>
+                <div class="service-card" onclick="openServiceModal('Municipal Tax', 'fa-landmark', '#CCFBF1', '#0D9488')"><div class="service-icon" style="background:#CCFBF1; color:#0D9488;"><i class="fa-solid fa-landmark"></i></div><div class="service-name">Municipal Tax</div></div>
+                <div class="service-card" onclick="openServiceModal('Society Maintenance', 'fa-building', '#E0E7FF', '#4F46E5')"><div class="service-icon" style="background:#E0E7FF; color:#4F46E5;"><i class="fa-solid fa-building"></i></div><div class="service-name">Society Maintenance</div></div>
+                <div class="service-card" onclick="openServiceModal('Hospital Bills', 'fa-hospital', '#FCE7F3', '#DB2777')"><div class="service-icon" style="background:#FCE7F3; color:#DB2777;"><i class="fa-solid fa-hospital"></i></div><div class="service-name">Hospital Bills</div></div>
+                <div class="service-card" onclick="openServiceModal('Subscriptions', 'fa-newspaper', '#FEF9C3', '#CA8A04')"><div class="service-icon" style="background:#FEF9C3; color:#CA8A04;"><i class="fa-solid fa-newspaper"></i></div><div class="service-name">Subscriptions</div></div>
+                <div class="service-card" onclick="openServiceModal('Club Membership', 'fa-ticket', '#F3F4F6', '#374151')"><div class="service-icon" style="background:#F3F4F6; color:#374151;"><i class="fa-solid fa-ticket"></i></div><div class="service-name">Club Membership</div></div>
+                <div class="service-card" onclick="openServiceModal('House Rent Pay', 'fa-house-chimney', '#E0F2FE', '#0369A1')"><div class="service-icon" style="background:#E0F2FE; color:#0369A1;"><i class="fa-solid fa-house-chimney"></i></div><div class="service-name">House Rent Pay</div></div>
+            </div>
+
+            <!-- SECTION 5 -->
+            <div class="section-heading">📱 Recharges & FASTag</div>
+            <div class="services-grid">
+                <div class="service-card" onclick="openServiceModal('Mobile Prepaid', 'fa-mobile-screen', '#FCE7F3', '#DB2777')"><div class="service-icon" style="background:#FCE7F3; color:#DB2777;"><i class="fa-solid fa-mobile-screen"></i></div><div class="service-name">Mobile Prepaid</div></div>
+                <div class="service-card" onclick="openServiceModal('Mobile Postpaid', 'fa-phone-volume', '#E0E7FE', '#4338CA')"><div class="service-icon" style="background:#E0E7FE; color:#4338CA;"><i class="fa-solid fa-phone-volume"></i></div><div class="service-name">Mobile Postpaid</div></div>
+                <div class="service-card" onclick="openServiceModal('DTH Recharge', 'fa-tv', '#FEF9C3', '#CA8A04')"><div class="service-icon" style="background:#FEF9C3; color:#CA8A04;"><i class="fa-solid fa-tv"></i></div><div class="service-name">DTH Recharge</div></div>
+                <div class="service-card" onclick="openServiceModal('FASTag Issuance', 'fa-car', '#E0F2FE', '#0284C7')"><div class="service-icon" style="background:#E0F2FE; color:#0284C7;"><i class="fa-solid fa-car"></i></div><div class="service-name">FASTag Issuance</div></div>
+                <div class="service-card" onclick="openServiceModal('FASTag Recharge', 'fa-road', '#DCFCE7', '#15803D')"><div class="service-icon" style="background:#DCFCE7; color:#15803D;"><i class="fa-solid fa-road"></i></div><div class="service-name">FASTag Recharge</div></div>
+                <div class="service-card" onclick="openServiceModal('Metro Card', 'fa-train-subway', '#FFEDD5', '#C2410C')"><div class="service-icon" style="background:#FFEDD5; color:#C2410C;"><i class="fa-solid fa-train-subway"></i></div><div class="service-name">Metro Card</div></div>
+                <div class="service-card" onclick="openServiceModal('Google Play Code', 'fa-gamepad', '#F3E8FF', '#7E22CE')"><div class="service-icon" style="background:#F3E8FF; color:#7E22CE;"><i class="fa-solid fa-gamepad"></i></div><div class="service-name">Google Play Code</div></div>
+                <div class="service-card" onclick="openServiceModal('NCMC Card Topup', 'fa-credit-card', '#CCFBF1', '#0F766E')"><div class="service-icon" style="background:#CCFBF1; color:#0F766E;"><i class="fa-solid fa-credit-card"></i></div><div class="service-name">NCMC Card Topup</div></div>
+                <div class="service-card" onclick="openServiceModal('OTT Pay', 'fa-film', '#FEE2E2', '#991B1B')"><div class="service-icon" style="background:#FEE2E2; color:#991B1B;"><i class="fa-solid fa-film"></i></div><div class="service-name">OTT Pay</div></div>
+                <div class="service-card" onclick="openServiceModal('Data Card Topup', 'fa-wifi', '#F3F4F6', '#374151')"><div class="service-icon" style="background:#F3F4F6; color:#374151;"><i class="fa-solid fa-wifi"></i></div><div class="service-name">Data Card Topup</div></div>
+            </div>
+
+            <!-- SECTION 6 -->
+            <div class="section-heading">📈 Loans & Credit Services</div>
+            <div class="services-grid">
+                <div class="service-card" onclick="openServiceModal('Personal Loan', 'fa-hand-holding-dollar', '#FCE7F3', '#BE185D')"><div class="service-icon" style="background:#FCE7F3; color:#BE185D;"><i class="fa-solid fa-hand-holding-dollar"></i></div><div class="service-name">Personal Loan</div></div>
+                <div class="service-card" onclick="openServiceModal('Gold Loan', 'fa-coins', '#FEF9C3', '#A16207')"><div class="service-icon" style="background:#FEF9C3; color:#A16207;"><i class="fa-solid fa-coins"></i></div><div class="service-name">Gold Loan</div></div>
+                <div class="service-card" onclick="openServiceModal('Home Loan', 'fa-house', '#E0F2FE', '#0284C7')"><div class="service-icon" style="background:#E0F2FE; color:#0284C7;"><i class="fa-solid fa-house"></i></div><div class="service-name">Home Loan</div></div>
+                <div class="service-card" onclick="openServiceModal('Car Loan', 'fa-car-side', '#DCFCE7', '#16A34A')"><div class="service-icon" style="background:#DCFCE7; color:#16A34A;"><i class="fa-solid fa-car-side"></i></div><div class="service-name">Car Loan</div></div>
+                <div class="service-card" onclick="openServiceModal('Two Wheeler Loan', 'fa-motorcycle', '#FFEDD5', '#EA580C')"><div class="service-icon" style="background:#FFEDD5; color:#EA580C;"><i class="fa-solid fa-motorcycle"></i></div><div class="service-name">Two Wheeler Loan</div></div>
+                <div class="service-card" onclick="openServiceModal('Mudra Loan', 'fa-handshake', '#FEE2E2', '#DC2626')"><div class="service-icon" style="background:#FEE2E2; color:#DC2626;"><i class="fa-solid fa-handshake"></i></div><div class="service-name">Mudra Loan</div></div>
+                <div class="service-card" onclick="openServiceModal('Business Loan', 'fa-chart-line', '#F3E8FF', '#9333EA')"><div class="service-icon" style="background:#F3E8FF; color:#9333EA;"><i class="fa-solid fa-chart-line"></i></div><div class="service-name">Business Loan</div></div>
+                <div class="service-card" onclick="openServiceModal('Credit Card Apply', 'fa-credit-card', '#E0E7FF', '#4F46E5')"><div class="service-icon" style="background:#E0E7FF; color:#4F46E5;"><i class="fa-solid fa-credit-card"></i></div><div class="service-name">Credit Card Apply</div></div>
+                <div class="service-card" onclick="openServiceModal('Credit Card Bill', 'fa-receipt', '#CCFBF1', '#0D9488')"><div class="service-icon" style="background:#CCFBF1; color:#0D9488;"><i class="fa-solid fa-receipt"></i></div><div class="service-name">Credit Card Bill</div></div>
+                <div class="service-card" onclick="openServiceModal('Loan EMI Pay', 'fa-file-invoice-dollar', '#F3F4F6', '#1F2937')"><div class="service-icon" style="background:#F3F4F6; color:#1F2937;"><i class="fa-solid fa-file-invoice-dollar"></i></div><div class="service-name">Loan EMI Pay</div></div>
+            </div>
+
+            <!-- SECTION 7 -->
+            <div class="section-heading">🛡️ Insurance & Government Schemes</div>
+            <div class="services-grid">
+                <div class="service-card" onclick="openServiceModal('PMJJBY Insurance', 'fa-shield-halved', '#DCFCE7', '#16A34A')"><div class="service-icon" style="background:#DCFCE7; color:#16A34A;"><i class="fa-solid fa-shield-halved"></i></div><div class="service-name">PMJJBY Insurance</div></div>
+                <div class="service-card" onclick="openServiceModal('PMSBY Insurance', 'fa-shield-heart', '#E0E7FF', '#4338CA')"><div class="service-icon" style="background:#E0E7FF; color:#4338CA;"><i class="fa-solid fa-shield-heart"></i></div><div class="service-name">PMSBY Insurance</div></div>
+                <div class="service-card" onclick="openServiceModal('Atal Pension (APY)', 'fa-user-shield', '#FEE2E2', '#991B1B')"><div class="service-icon" style="background:#FEE2E2; color:#991B1B;"><i class="fa-solid fa-user-shield"></i></div><div class="service-name">Atal Pension (APY)</div></div>
+                <div class="service-card" onclick="openServiceModal('Health Insurance', 'fa-heart-pulse', '#FCE7F3', '#DB2777')"><div class="service-icon" style="background:#FCE7F3; color:#DB2777;"><i class="fa-solid fa-heart-pulse"></i></div><div class="service-name">Health Insurance</div></div>
+                <div class="service-card" onclick="openServiceModal('Motor Insurance', 'fa-car-burst', '#E0F2FE', '#0284C7')"><div class="service-icon" style="background:#E0F2FE; color:#0284C7;"><i class="fa-solid fa-car-burst"></i></div><div class="service-name">Motor Insurance</div></div>
+                <div class="service-card" onclick="openServiceModal('Term Life Insurance', 'fa-umbrella', '#FEF3C7', '#D97706')"><div class="service-icon" style="background:#FEF3C7; color:#D97706;"><i class="fa-solid fa-umbrella"></i></div><div class="service-name">Term Life Insurance</div></div>
+                <div class="service-card" onclick="openServiceModal('Shop Insurance', 'fa-store', '#FFEDD5', '#EA580C')"><div class="service-icon" style="background:#FFEDD5; color:#EA580C;"><i class="fa-solid fa-store"></i></div><div class="service-name">Shop Insurance</div></div>
+                <div class="service-card" onclick="openServiceModal('Accident Cover', 'fa-triangle-exclamation', '#F3E8FF', '#9333EA')"><div class="service-icon" style="background:#F3E8FF; color:#9333EA;"><i class="fa-solid fa-triangle-exclamation"></i></div><div class="service-name">Accident Cover</div></div>
+                <div class="service-card" onclick="openServiceModal('Cattle Insurance', 'fa-cow', '#CCFBF1', '#0D9488')"><div class="service-icon" style="background:#CCFBF1; color:#0D9488;"><i class="fa-solid fa-cow"></i></div><div class="service-name">Cattle Insurance</div></div>
+                <div class="service-card" onclick="openServiceModal('Crop Insurance', 'fa-wheat-awn', '#FEF9C3', '#CA8A04')"><div class="service-icon" style="background:#FEF9C3; color:#CA8A04;"><i class="fa-solid fa-wheat-awn"></i></div><div class="service-name">Crop Insurance</div></div>
+            </div>
+
+            <!-- SECTION 8 -->
+            <div class="section-heading">📊 Reports & Administration</div>
+            <div class="services-grid">
+                <div class="service-card" onclick="openServiceModal('Transaction Ledger', 'fa-book-bookmark', '#F3E8FF', '#7E22CE')"><div class="service-icon" style="background:#F3E8FF; color:#7E22CE;"><i class="fa-solid fa-book-bookmark"></i></div><div class="service-name">Transaction Ledger</div></div>
+                <div class="service-card" onclick="openServiceModal('Commission Payout', 'fa-hand-holding-hand', '#DCFCE7', '#15803D')"><div class="service-icon" style="background:#DCFCE7; color:#15803D;"><i class="fa-solid fa-hand-holding-hand"></i></div><div class="service-name">Commission Payout</div></div>
+                <div class="service-card" onclick="openServiceModal('CMS Cash Deposit', 'fa-box-archive', '#FFEDD5', '#C2410C')"><div class="service-icon" style="background:#FFEDD5; color:#C2410C;"><i class="fa-solid fa-box-archive"></i></div><div class="service-name">CMS Cash Deposit</div></div>
+                <div class="service-card" onclick="openServiceModal('Life Certificate', 'fa-certificate', '#E0F2FE', '#0369A1')"><div class="service-icon" style="background:#E0F2FE; color:#0369A1;"><i class="fa-solid fa-certificate"></i></div><div class="service-name">Life Certificate</div></div>
+                <div class="service-card" onclick="openServiceModal('Helpdesk Support', 'fa-headset', '#FEE2E2', '#B91C1C')"><div class="service-icon" style="background:#FEE2E2; color:#B91C1C;"><i class="fa-solid fa-headset"></i></div><div class="service-name">Helpdesk & Support</div></div>
+                <div class="service-card" onclick="openServiceModal('Agent Settings', 'fa-gear', '#F3F4F6', '#1F2937')"><div class="service-icon" style="background:#F3F4F6; color:#1F2937;"><i class="fa-solid fa-gear"></i></div><div class="service-name">Agent Settings</div></div>
+                <div class="service-card" onclick="openServiceModal('Daily Closing', 'fa-clipboard-list', '#FEF3C7', '#D97706')"><div class="service-icon" style="background:#FEF3C7; color:#D97706;"><i class="fa-solid fa-clipboard-list"></i></div><div class="service-name">Daily Closing</div></div>
+                <div class="service-card" onclick="openServiceModal('Cash Drawer', 'fa-vault', '#CCFBF1', '#0D9488')"><div class="service-icon" style="background:#CCFBF1; color:#0D9488;"><i class="fa-solid fa-vault"></i></div><div class="service-name">Cash Drawer</div></div>
+                <div class="service-card" onclick="openServiceModal('Dispute Portal', 'fa-scale-balanced', '#E0E7FF', '#4338CA')"><div class="service-icon" style="background:#E0E7FF; color:#4338CA;"><i class="fa-solid fa-scale-balanced"></i></div><div class="service-name">Dispute Portal</div></div>
+                <div class="service-card" onclick="openServiceModal('Notification Logs', 'fa-bell', '#FCE7F3', '#DB2777')"><div class="service-icon" style="background:#FCE7F3; color:#DB2777;"><i class="fa-solid fa-bell"></i></div><div class="service-name">Notification Logs</div></div>
+            </div>
+
+        </div>
+
+        <!-- Zoom-In Service Modal Popup with Processing State & Close Icon -->
+        <div class="modal-overlay" id="serviceModal">
+            <div class="modal-card">
+                <button class="modal-close-btn" onclick="closeServiceModal()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                
+                <div id="modalLoadingState">
+                    <div class="modal-title">Processing Request...</div>
+                    <div class="processing-spinner"></div>
+                    <div class="modal-desc">Please wait while we establish secure connection with biometric scanner.</div>
+                </div>
+
+                <div id="modalContentState" style="display: none;">
+                    <div class="modal-icon-container" id="modalIconBg">
+                        <i id="modalIconClass" class="fa-solid"></i>
+                    </div>
+                    <div class="modal-title" id="modalTitle">Service Name</div>
+                    <div class="modal-desc" id="modalDesc">Please connect biometric device first!</div>
+                    <button class="modal-btn" onclick="closeServiceModal()">OK / Dismiss</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Official ICICI Bank Real Full Footer -->
+        <footer class="portal-footer">
+            <div class="footer-container">
+                <div class="footer-row-top">
+                    <img src="https://i.ibb.co/jv4CLmZd/media-14a74a8539b18077c7a0776801f6143837c880a31.webp" alt="ICICI Logo" class="footer-logo">
+                    <div class="footer-security-badges">
+                        <span><i class="fa-solid fa-shield-halved" style="color: #D97706;"></i> 256-bit SSL Encryption</span>
+                        <span><i class="fa-solid fa-building-columns" style="color: #16A34A;"></i> RBI Regulated</span>
+                        <span><i class="fa-solid fa-id-card" style="color: #0284C7;"></i> UIDAI Compliant</span>
+                    </div>
+                </div>
+                <div class="footer-row-middle">
+                    <strong>Disclaimer:</strong> ICICI Bank Business Correspondent (CSP) Portal is governed by strict compliance, KYC norms, and security guidelines. All transactions require biometric authentication of authorized agents (Shibu S L). Unauthorized access is strictly prohibited and punishable under IT Act.
+                </div>
+                <div class="footer-row-bottom">
+                    <div>© 2026 ICICI Bank Limited. All rights reserved.</div>
+                    <div class="footer-links">
+                        <a href="#" onclick="alert('Privacy Policy guidelines.')">Privacy Policy</a>
+                        <a href="#" onclick="alert('Terms & Conditions.')">Terms & Conditions</a>
+                        <a href="#" onclick="alert('Security Information.')">Security</a>
+                        <a href="#" onclick="alert('RBI Guidelines.')">Regulatory Disclosure</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        function handleLogin(event) {
+            event.preventDefault();
+            const userId = document.getElementById('loginUserId').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+
+            if (userId === "SHIBU529033UI2945" && password === "$Shibu2602SL") {
+                document.getElementById('loginWrapper').style.display = 'none';
+                document.getElementById('appMainContainer').style.display = 'flex';
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+            }
+        }
+
+        function handleLogout() {
+            document.getElementById('loginPassword').value = '';
+            document.getElementById('loginError').style.display = 'none';
+            document.getElementById('appMainContainer').style.display = 'none';
+            document.getElementById('loginWrapper').style.display = 'flex';
+        }
+
+        function connectBiometricDevice() {
+            const modal = document.getElementById('serviceModal');
+            const loadingState = document.getElementById('modalLoadingState');
+            const contentState = document.getElementById('modalContentState');
+
+            loadingState.style.display = 'block';
+            contentState.style.display = 'none';
+            modal.style.display = 'flex';
+
+            setTimeout(() => {
+                loadingState.style.display = 'none';
+                contentState.style.display = 'block';
+
+                document.getElementById('modalTitle').innerText = "Connection Failed";
+                document.getElementById('modalDesc').innerHTML = "Biometric device connection failed! please try again .";
+                
+                const iconBg = document.getElementById('modalIconBg');
+                iconBg.style.backgroundColor = '#FEE2E2';
+                
+                const iconElem = document.getElementById('modalIconClass');
+                iconElem.className = `fa-solid fa-triangle-exclamation`;
+                iconElem.style.color = '#DC2626';
+            }, 1200);
+        }
+
+        function openServiceModal(name, iconClass, bgColor, iconColor) {
+            const modal = document.getElementById('serviceModal');
+            const loadingState = document.getElementById('modalLoadingState');
+            const contentState = document.getElementById('modalContentState');
+
+            loadingState.style.display = 'block';
+            contentState.style.display = 'none';
+            modal.style.display = 'flex';
+
+            setTimeout(() => {
+                loadingState.style.display = 'none';
+                contentState.style.display = 'block';
+
+                document.getElementById('modalTitle').innerText = "Action Required";
+                document.getElementById('modalDesc').innerHTML = "Please connect biometric device first!";
+                
+                const iconBg = document.getElementById('modalIconBg');
+                iconBg.style.backgroundColor = '#FEE2E2';
+                
+                const iconElem = document.getElementById('modalIconClass');
+                iconElem.className = `fa-solid fa-triangle-exclamation`;
+                iconElem.style.color = '#DC2626';
+            }, 1200);
+        }
+
+        function closeServiceModal() {
+            document.getElementById('serviceModal').style.display = 'none';
+        }
+    </script>
+
+</body>
+</html>
